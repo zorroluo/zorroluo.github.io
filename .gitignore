@@ -1,0 +1,7 @@
+.venv/
+output/
+cache/
+.pelican-cache/
+*.pyc
+__pycache__/
+.DS_Store
