@@ -6,7 +6,7 @@ PATH = "content"
 
 TIMEZONE = 'Asia/Shanghai'
 
-DEFAULT_LANG = 'zh'
+DEFAULT_LANG = 'zh_CN'
 
 # 注销这个主题，就会恢复到默认的主题
 # THEME = "themes/pelican-alchemy/alchemy"
