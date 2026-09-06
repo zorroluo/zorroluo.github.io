@@ -20,7 +20,273 @@
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="/pelicanshang-xie-bo-ke-yi-ji-fa-bu-bo-ke-jiao-cheng.html">Pelican上写博客以及发布博客教程</a></h1>
+                        <h1 class="entry-title"><a href="/gitxue-xi-bi-ji.html">git学习笔记</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2026-09-06T19:45:00+08:00">
+                Published: 日 06 9月 2026
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/zorro.html">Zorro</a>
+                </address>
+        <p>In <a href="/category/bian-cheng-bi-ji.html">编程笔记</a>.</p>
+<p>tags: <a href="/tag/bash.html">bash</a> <a href="/tag/git.html">git</a> </p>        
+</footer><!-- /.post-info --><hr>
+<h1>Git 简明教程</h1>
+<h2>0. 初始配置</h2>
+<div class="highlight"><pre><span></span><code><span class="gh">#</span> 查看版本
+git --version
+
+<span class="gh">#</span> 设置用户名邮箱（全局，所有仓库生效）
+git config --global user.name &quot;***&quot;
+git config --global user.email &quot;***.com&quot;
+
+<span class="gh">#</span> 查看全局配置
+git config --global --list
+</code></pre></div>
+
+<h2>1. 创建仓库</h2>
+<div class="highlight"><pre><span></span><code><span class="c1"># 方式1：本地新建仓库</span>
+mkdir<span class="w"> </span>myproject
+<span class="nb">cd</span><span class="w"> </span>myproject
+git<span class="w"> </span>init<span class="w">   </span><span class="c1"># 在当前目录初始化git仓库，生成隐藏 .git 文件夹</span>
+
+<span class="c1"># 方式2：克隆远程仓库到本地</span>
+git<span class="w"> </span>clone<span class="w"> </span>git@github.com:zorroluo/demo.git
+<span class="c1"># git clone https://github.com/zorroluo/demo.git # https方式</span>
+</code></pre></div>
+
+<h2>2. 工作区、暂存区、本地仓库、远程仓库概念</h2>
+<ul>
+<li><strong>工作区</strong>：你肉眼看到的文件</li>
+<li><strong>暂存区 (index)</strong>：<code>git add</code> 存放待提交快照</li>
+<li><strong>本地仓库 (.git)</strong>：<code>git commit</code> 保存历史版本</li>
+<li><strong>远程仓库</strong>：GitHub/Gitee 服务器端仓库</li>
+</ul>
+<p>文件状态：<code>untracked未跟踪</code> → <code>staged已暂存</code> → <code>committed已提交</code></p>
+<h2>3. 日常基础工作流</h2>
+<div class="highlight"><pre><span></span><code># 查看状态，最常用
+git status
+
+# 把文件加入暂存区
+git add readme.md          # 单个文件
+git add .                  # 当前目录全部新增/修改文件加入暂存
+
+# 提交到本地仓库，写提交说明
+git commit -m &quot;feat: 新增readme文档&quot;
+
+# ---------------- 撤销操作（新版 restore，替代旧 checkout） ----------------
+# 1. 工作区修改丢弃，把文件恢复成暂存区版本（会丢掉本地未保存修改）
+git restore readme.md
+# 旧写法：git checkout -- readme.md
+
+# 2. 将文件从暂存区撤销回工作区（不删除文件修改，只是取消add）
+git restore --staged readme.md
+# 旧写法：git reset HEAD readme.md
+</code></pre></div>
+
+<h2>4. 分支操作（重点！switch 替代 checkout 切换分支）</h2>
+<blockquote>
+<p>仓库默认初始分支：<strong>master</strong></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code># 查看本地分支
+git branch
+
+# 查看本地+远程全部分支
+git branch -a
+
+# 新建分支并切换到该分支【新版】
+git switch -c dev
+# 旧写法：git checkout -b dev
+
+# 只切换已有分支【新版】
+git switch master
+# 旧写法：git checkout master
+
+# 删除本地分支
+git branch -d dev
+
+# 强制删除未合并的分支
+git branch -D dev
+</code></pre></div>
+
+<h2>5. 合并分支</h2>
+<p>场景：dev 开发完成，合并到 master</p>
+<div class="highlight"><pre><span></span><code># 1. 先切回 master
+git switch master
+
+# 2. 将dev分支合并进master
+git merge dev
+
+# 遇到冲突：手动打开文件修改冲突标记，改完后
+git add .
+git commit   # 冲突提交不需要-m
+</code></pre></div>
+
+<h2>6. 版本回退 &amp; log 查看</h2>
+<div class="highlight"><pre><span></span><code><span class="gh">#</span> 简洁查看提交历史
+git log --oneline
+
+<span class="gh">#</span> 完整日志
+git log
+
+<span class="gh">#</span> 回退本地仓库到某个commit_id，保留文件修改（soft）
+git reset --soft  a123bcd
+
+<span class="gh">#</span> 回退本地仓库，清空暂存区，文件保留（mixed 默认）
+git reset a123bcd
+
+<span class="gh">#</span> 危险：彻底回退，工作区文件全部丢弃
+git reset --hard a123bcd
+
+<span class="gh">#</span> 查看所有操作记录，找回误删commit
+git reflog
+</code></pre></div>
+
+<h2>7. Stash：临时储藏工作区改动</h2>
+<p>不想 commit，但要切分支，把修改临时存起来</p>
+<div class="highlight"><pre><span></span><code>git stash push -m &quot;临时保存：正在写的功能&quot;
+
+# 查看储藏列表
+git stash list
+
+# 恢复储藏，不删除stash记录
+git stash apply stash@{0}
+
+# 恢复并删除stash记录
+git stash pop
+
+# 删除储藏
+git stash drop stash@{0}
+</code></pre></div>
+
+<h2>8. 远程仓库操作</h2>
+<div class="highlight"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">查看远程仓库地址</span>
+<span class="n">git</span><span class="w"> </span><span class="n">remote</span><span class="w"> </span><span class="o">-</span><span class="n">v</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">添加远程仓库</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">别名</span>
+<span class="n">git</span><span class="w"> </span><span class="n">remote</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">git</span><span class="nv">@github</span><span class="p">.</span><span class="nl">com</span><span class="p">:</span><span class="n">zorroluo</span><span class="o">/</span><span class="n">demo</span><span class="p">.</span><span class="n">git</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">修改远程地址</span>
+<span class="n">git</span><span class="w"> </span><span class="n">remote</span><span class="w"> </span><span class="k">set</span><span class="o">-</span><span class="n">url</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">git</span><span class="nv">@github</span><span class="p">.</span><span class="nl">com</span><span class="p">:</span><span class="n">xxx</span><span class="o">/</span><span class="k">new</span><span class="p">.</span><span class="n">git</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">拉取远程更新</span><span class="err">（</span><span class="n">不自动合并</span><span class="err">）</span>
+<span class="n">git</span><span class="w"> </span><span class="k">fetch</span><span class="w"> </span><span class="n">origin</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">拉取远程master并合并到本地master</span>
+<span class="n">git</span><span class="w"> </span><span class="n">pull</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">master</span>
+<span class="err">#</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">pull</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="k">fetch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="k">merge</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">推送本地master分支到远程master</span>
+<span class="n">git</span><span class="w"> </span><span class="n">push</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">master</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">首次推送本地新建分支到远程</span>
+<span class="n">git</span><span class="w"> </span><span class="n">push</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">dev</span>
+<span class="err">#</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="n">设置上游关联</span><span class="err">，</span><span class="n">后续直接</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">push</span><span class="o">/</span><span class="n">git</span><span class="w"> </span><span class="n">pull</span><span class="w"> </span><span class="n">不用写分支名</span>
+</code></pre></div>
+
+<h2>9. .gitignore 文件</h2>
+<p>在仓库根目录新建 <code>.gitignore</code>，填写要忽略的文件，示例：</p>
+<div class="highlight"><pre><span></span><code><span class="err">*</span><span class="na">.log</span>
+<span class="na">.DS_Store</span>
+<span class="nf">venv</span><span class="err">/</span>
+<span class="nf">__pycache__</span><span class="err">/</span>
+<span class="err">*</span><span class="na">.pyc</span>
+<span class="na">.vscode</span><span class="err">/</span>
+</code></pre></div>
+
+<h2>10. Cherry‑pick：挑选某一个提交复制到当前分支</h2>
+<p>只拿某一个 commit，不合并整个分支</p>
+<div class="highlight"><pre><span></span><code>git cherry-pick abc123   # commit hash值
+</code></pre></div>
+
+<h2>11. Rebase（变基，整理提交历史）</h2>
+<blockquote>
+<p>不要在多人共用远程分支上执行 rebase，只用于本地未推送的提交</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code># 将当前dev分支变基到master
+git switch dev
+git rebase master
+
+# 交互式rebase，合并/修改本地多个commit
+git rebase -i HEAD~3
+</code></pre></div>
+
+<h2>12. 常用速查表（新版｜旧版对照）</h2>
+<p>表格</p>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th>新版命令（git≥2.23）</th>
+<th>老版本命令</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>切换分支</td>
+<td><code>git switch &lt;branch&gt;</code></td>
+<td><code>git checkout &lt;branch&gt;</code></td>
+</tr>
+<tr>
+<td>创建并切新分支</td>
+<td><code>git switch -c &lt;branch&gt;</code></td>
+<td><code>git checkout -b &lt;branch&gt;</code></td>
+</tr>
+<tr>
+<td>丢弃工作区修改</td>
+<td><code>git restore &lt;file&gt;</code></td>
+<td><code>git checkout -- &lt;file&gt;</code></td>
+</tr>
+<tr>
+<td>取消暂存</td>
+<td><code>git restore --staged &lt;file&gt;</code></td>
+<td><code>git reset HEAD &lt;file&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h2>13. 标准团队开发简单工作流（master 为主分支）</h2>
+<ol>
+<li><code>git switch master</code>，<code>git pull origin master</code> 更新本地主分支</li>
+<li><code>git switch -c feature/xxx</code> 创建功能分支开发</li>
+<li>多次 <code>git add</code> / <code>git commit</code></li>
+<li>完成后 push 到远程：<code>git push -u origin feature/xxx</code></li>
+<li>在 github 提交 PR/MR，代码评审</li>
+<li>评审通过后合并到 master</li>
+<li>本地 master 拉取最新代码：<code>git switch master &amp;&amp; git pull</code></li>
+</ol>
+<hr>
+<h3>补充小提示</h3>
+<ol>
+<li><strong>commit 规范建议</strong><code>feat:</code> 新功能；<code>fix:</code> bug 修复；<code>docs:</code>文档；<code>refactor:</code>重构；<code>test:</code>测试；<code>chore:</code>构建 / 工具改动
+示例：<code>git commit -m "feat: 实现用户登录接口"</code></li>
+<li>
+<p>SSH vs HTTPS</p>
+</li>
+<li>
+<p>SSH：配置密钥后不用输密码，推荐（<code>git@github.com:...</code>）</p>
+</li>
+<li>
+<p>HTTPS：每次需要账号 token</p>
+</li>
+<li>
+<p>危险操作提醒
+<code>reset --hard</code>、<code>rebase</code> 不要对已经推送到远程、多人共用的分支执行，会破坏别人本地仓库。</p>
+</li>
+</ol>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="/pelicanshang-xie-bo-ke-yi-ji-fa-bu-bo-ke-jiao-cheng.html" rel="bookmark"
+                               title="Permalink to Pelican上写博客以及发布博客教程">Pelican上写博客以及发布博客教程</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2026-09-06T19:00:00+08:00">
                 Published: 日 06 9月 2026
@@ -31,147 +297,10 @@
                 </address>
         <p>In <a href="/category/bian-cheng-bi-ji.html">编程笔记</a>.</p>
 <p>tags: <a href="/tag/bash.html">bash</a> <a href="/tag/pelican.html">Pelican</a> </p>        
-</footer><!-- /.post-info --><hr>
-<h1>Pelican 完整写文 + 发布教程</h1>
-<blockquote>
-<p>适配我的个人项目： zorroluo.github.io，GitHub‑Pages gh‑pages 分支方案<br>
-源码放 master；生成好的网页成品部署到 gh‑pages，两条分支职责严格分开Pelican</p>
-</blockquote>
-<h2>一、每次开工第一步（必做）</h2>
-<p>打开终端，进入博客根目录，激活虚拟环境</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/zorroluo.github.io
-<span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-</code></pre></div>
-
-<p>提示符出现 <code>(.venv)</code> 代表环境就绪。</p>
-<blockquote>
-<p>所有文章<strong>只能写在 <code>content/</code> 文件夹里面</strong>，不要放到 output、themes 目录。</p>
-</blockquote>
-<h2>二、新建一篇博客文章</h2>
-<h3>1. 新建 md 文件</h3>
-<div class="highlight"><pre><span></span><code>touch content/my‑new‑article.md
-</code></pre></div>
-
-<p>文件名建议英文、小写、横杠分隔，<strong>不要中文文件名</strong>（避免线上链接报错）。</p>
-<h3>2. 文章头部元数据</h3>
-<p>用 VS‑Code 打开这个 <code>.md</code>，<strong>最顶部必须写元数据</strong>，Pelican 靠它识别文章信息Pelican。
-完整模板，直接复制：</p>
-<div class="highlight"><pre><span></span><code><span class="n">Title</span><span class="o">:</span><span class="w"> </span><span class="n">Bash学习笔记</span>
-<span class="n">Date</span><span class="o">:</span><span class="w"> </span><span class="mi">2026</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">06</span><span class="w"> </span><span class="mi">17</span><span class="o">:</span><span class="mi">00</span>
-<span class="n">Category</span><span class="o">:</span><span class="w"> </span><span class="err">编程笔记</span>
-<span class="n">Tags</span><span class="o">:</span><span class="w"> </span><span class="n">bash</span><span class="o">,</span><span class="w"> </span><span class="n">shell</span><span class="o">,</span><span class="w"> </span><span class="err">终端</span>
-<span class="n">Author</span><span class="o">:</span><span class="w"> </span><span class="n">Zorro</span>
-<span class="n">Summary</span><span class="o">:</span><span class="w"> </span><span class="err">记录</span><span class="n">Bash基础命令学习心得</span>
-
-<span class="o">---</span>
-
-<span class="err">正文从此开始，正常写</span><span class="n">Markdown内容</span><span class="err">。</span>
-
-<span class="err">##</span><span class="w"> </span><span class="err">二级标题</span>
-<span class="o">-</span><span class="w"> </span><span class="err">清单</span><span class="mi">1</span>
-<span class="o">-</span><span class="w"> </span><span class="err">清单</span><span class="mi">2</span>
-
-<span class="err">`</span><span class="n">pelican</span><span class="w"> </span><span class="n">content</span><span class="err">`</span>
-</code></pre></div>
-
-<h4>元数据规则</h4>
-<ol>
-<li><code>Title:</code> 不能省略，<strong>冒号后面要有空格</strong></li>
-<li><code>Date:</code> 格式固定 <code>年‑月‑日 时:分</code></li>
-<li>多个标签用英文逗号隔开：<code>Tags: bash, markdown, pelican</code></li>
-<li>元数据写完空一行，再加 <code>---</code> 分隔头部与正文（可选，可读性更好）</li>
-</ol>
-<blockquote>
-<p>图片存放位置：<code>content/images/xxx.png</code>；文中引用 <code>![截图](images/xxx.png)</code></p>
-</blockquote>
-<h2>三、本地预览（发布前必须！）三步流程</h2>
-<h3>第一步：生成静态网页</h3>
-<div class="highlight"><pre><span></span><code>pelican content
-</code></pre></div>
-
-<p>读取 content 下面所有 md 文章，生成 html 网页，输出到 <code>output/</code> 文件夹Pelican。</p>
-<blockquote>
-<p>如果修改文章后页面没变，清除缓存，加上参数：
-<code>pelican content --ignore-cache</code></p>
-</blockquote>
-<h3>第二步：启动本地预览服务器</h3>
-<p>新开一个终端窗口（保持虚拟环境）</p>
-<div class="highlight"><pre><span></span><code>pelican -l
-</code></pre></div>
-
-<p>浏览器打开：<code>http://127.0.0.1:8000</code>，检查文章排版、图片、链接是否正常。<br>
-看完按 <code>Ctrl + C</code> 关闭预览服务。</p>
-<blockquote>
-<p><strong>此时仅仅是你本地能看见，互联网上还看不到！</strong></p>
-</blockquote>
-<h2>四、推送到线上（发布到 GitHub Pages）</h2>
-<h3>流程 1：保存博客源码（master 分支，你的文章、配置、主题）</h3>
-<div class="highlight"><pre><span></span><code># 查看改动
-git status
-# 添加修改
-git add content/ pelicanconf.py themes/
-# 提交
-git commit -m &quot;新增文章：Pelican学习笔记&quot;
-# 推送源码到远程master
-git push origin master
-</code></pre></div>
-
-<blockquote>
-<p>master 分支存<strong>源代码</strong>（md 文章、配置、主题），这是你的备份！<strong>一定要提交</strong>。</p>
-</blockquote>
-<h3>流程 2：把网页成品部署 gh‑pages（对外访问的网页）</h3>
-<div class="highlight"><pre><span></span><code>ghp-import<span class="w"> </span>output<span class="w"> </span>-b<span class="w"> </span>gh-pages
-git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>gh-pages
-</code></pre></div>
-
-<ul>
-<li><code>ghp‑import</code>：读取 output 文件夹，自动更新本地 gh‑pages 分支，<strong>不需要你手动切换 gh‑pages 分支</strong>！</li>
-<li><code>git push origin gh‑pages</code>：上传生成好的网页到远程 gh‑pages 分支，网站就更新成功了。</li>
-</ul>
-<blockquote>
-<p>禁止手动 <code>git switch gh‑pages</code> 然后修改文件！gh‑pages 分支交给 ghp‑import 自动管理。</p>
-</blockquote>
-<h1>最后总结在代码：完整一键发布命令速查</h1>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1.生成网页，删除缓存</span>
-<span class="n">pelican</span> <span class="n">content</span> <span class="o">--</span><span class="n">ignore</span><span class="o">-</span><span class="n">cache</span>
-<span class="c1"># 2.预览(新开终端)</span>
-<span class="n">pelican</span> <span class="o">-</span><span class="n">l</span>
-<span class="c1"># 3.提交源码 master</span>
-<span class="n">git</span> <span class="n">add</span> <span class="n">content</span><span class="o">/</span>
-<span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span> <span class="s2">&quot;新增文章标题&quot;</span>
-<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">master</span>
-<span class="c1"># 4.部署线上网页</span>
-<span class="n">ghp</span><span class="o">-</span><span class="kn">import</span><span class="w"> </span><span class="nn">output</span> <span class="o">-</span><span class="n">b</span> <span class="n">gh</span><span class="o">-</span><span class="n">pages</span>
-<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">gh</span><span class="o">-</span><span class="n">pages</span>
-</code></pre></div>
-
-<h1>高频坑 &amp; 注意事项清单</h1>
-<h2>文章写作坑</h2>
-<ol>
-<li>元数据冒号后面<strong>必须空格</strong></li>
-<li>Markdown 所有符号：<code># - * [] ()</code> <strong>英文半角</strong></li>
-<li>文件名、图片文件名<strong>不要中文、空格</strong>，GitHub Pages 大小写敏感</li>
-<li>图片路径：本地预览正常、线上图片丢失，90% 原因：大小写拼写错误</li>
-<li>写完文章<strong>一定要本地预览一遍再推送线上</strong>，不要直接上线翻车</li>
-</ol>
-<h2>Git、分支管理大坑</h2>
-<ol>
-<li><strong>master = 源码仓库（md 文章，pelican 配置，主题）</strong></li>
-<li><strong>gh‑pages = 成品网页仓库（output 输出出来的 html）</strong></li>
-<li><strong>两个分支完全独立！推送 master ≠ 更新网站；推送 gh‑pages 网站才更新</strong></li>
-<li>output 文件夹永远不要提交到 master 分支！<code>.gitignore</code> 已经写好 <code>output/</code></li>
-<li>不要手动去 gh‑pages 分支里面修改网页，所有网页修改只能通过修改 content 文章，重新 pelican 生成</li>
-</ol>
-<h2>更新网站后旧内容依旧显示</h2>
-<p>浏览器强制刷新：Mac 快捷键 <code>Cmd+Shift+R</code>，清除 GitHub CDN 缓存；等待 1‑3 分钟生效。</p>
-<blockquote>
-<p>声明：以上内容基本有 AI 生成，我做了简单编辑。</p>
-</blockquote>                    </article>
-                </aside><!-- /#featured -->
-                    <section id="content" class="body">
-                        <h1>Other articles</h1>
-                        <hr />
-                        <ol id="posts-list" class="hfeed">
+</footer><!-- /.post-info -->                        <p>记录Pelican的学习笔记</p>
+                        <a class="readmore" href="/pelicanshang-xie-bo-ke-yi-ji-fa-bu-bo-ke-jiao-cheng.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
 
                 <li><article class="hentry">
                     <header>
