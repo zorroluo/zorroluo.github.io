@@ -13,12 +13,196 @@
                         <h1><a href="/">Zorro's blog</a></h1>
                         <nav><ul>
                                                 <li><a href="/category/bian-cheng-xue-xi.html">编程学习</a></li>
+                                                <li><a href="/category/xue-xi-bi-ji.html">学习笔记</a></li>
                         </ul></nav>
                 </header><!-- /#banner -->
 
                 <aside id="featured" class="body">
                     <article>
-                        <h1 class="entry-title"><a href="/wo-de-di-yi-pian-bo-ke-wen-zhang.html">我的第一篇博客文章</a></h1>
+                        <h1 class="entry-title"><a href="/markdownji-chu-jiao-cheng.html">Markdown基础教程</a></h1>
+<footer class="post-info">
+        <abbr class="published" title="2026-09-06T16:02:00+08:00">
+                Published: 日 06 9月 2026
+        </abbr>
+
+                <address class="vcard author">
+                        By                                 <a class="url fn" href="/author/zorro.html">Zorro</a>
+                </address>
+        <p>In <a href="/category/xue-xi-bi-ji.html">学习笔记</a>.</p>
+<p>tags: <a href="/tag/markdown.html">markdown</a> </p>        
+</footer><!-- /.post-info --><hr>
+<h2>Markdown基础练习</h2>
+<h3>1.如何显示标题，也就是加粗放大的字体：</h3>
+<p>源码：</p>
+<div class="highlight"><pre><span></span><code># 一级标题
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题
+</code></pre></div>
+
+<p>以上代码渲染结果如下：</p>
+<h1>一级标题</h1>
+<h2>二级标题</h2>
+<h3>三级标题</h3>
+<h4>四级标题</h4>
+<h5>五级标题</h5>
+<h6>六级标题</h6>
+<p>注意：# 后面必须加空格，不加空格渲染失败。</p>
+<h3>2.文字样式：加粗、斜体、删除线</h3>
+<p>源码：</p>
+<div class="highlight"><pre><span></span><code>普通文字
+**加粗文字**
+<span class="gs">*斜体文字*</span>
+***加粗斜体文字***
+~~这行文字被划掉~~
+</code></pre></div>
+
+<p>以上代码渲染结果如下:</p>
+<p>普通文字<br>
+<strong>加粗文字</strong><br>
+<em>斜体文字</em><br>
+<strong><em>加粗斜体文字</em></strong><br>
+~~这行文字被划掉~~  </p>
+<h3>3.换行与分段</h3>
+<ul>
+<li><strong>分段</strong>：两行之间空一行即可</li>
+<li><strong>强制换行</strong>：一行末尾加两个空格之后再按回车</li>
+</ul>
+<p>源码：</p>
+<div class="highlight"><pre><span></span><code>第一段文字
+
+第二段文字
+</code></pre></div>
+
+<h3>4.无序列表</h3>
+<p>源码：</p>
+<div class="highlight"><pre><span></span><code>- 第一项
+- 第二项
+- 第三项
+</code></pre></div>
+
+<p>以上代码渲染结果如下：</p>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<p>注意：- 后面要有空格。</p>
+<h3>5.有序列表</h3>
+<p>源码：</p>
+<div class="highlight"><pre><span></span><code><span class="mf">1.</span><span class="w"> </span><span class="n">第一步</span>
+<span class="mf">2.</span><span class="w"> </span><span class="n">第二步</span>
+<span class="mf">3.</span><span class="w"> </span><span class="n">第三步</span>
+</code></pre></div>
+
+<p>以上代码渲染结果如下：</p>
+<ol>
+<li>第一步</li>
+<li>第二步</li>
+<li>第三步  </li>
+</ol>
+<p>注意：. 号后面一定要有空格。</p>
+<h3>6.行内代码（适合命令、变量、文件名）</h3>
+<p>反引号 ` （键盘左上角，Esc 正下方)<br>
+源码：</p>
+<div class="highlight"><pre><span></span><code>使用命令 `pelican content` 生成网页。
+配置文件名字：`pelicanconf.py`
+</code></pre></div>
+
+<p>以上代码渲染结果如下:<br>
+使用命令 <code>pelican content</code> 生成网页<br>
+配置文件名字：<code>pelicanconf.py</code></p>
+<h3>7. 代码块（多行代码，写 bash，Python 命令必备）</h3>
+<p>前后三个反引号 ```<br>
+源码：</p>
+<div class="highlight"><pre><span></span><code><span class="err">```</span><span class="n">bash</span>
+<span class="n">pelican</span> <span class="n">content</span>
+<span class="n">ghp</span><span class="o">-</span><span class="kn">import</span><span class="w"> </span><span class="nn">output</span> <span class="o">-</span><span class="n">b</span> <span class="n">gh</span><span class="o">-</span><span class="n">pages</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">gh</span><span class="o">-</span><span class="n">pages</span>
+<span class="err">```</span>
+</code></pre></div>
+
+<p>以上代码渲染结果：</p>
+<div class="highlight"><pre><span></span><code>pelican<span class="w"> </span>content
+ghp-import<span class="w"> </span>output<span class="w"> </span>-b<span class="w"> </span>gh-pages
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>gh-pages
+</code></pre></div>
+
+<p>注意1：想要显示代码块的源码，外层可以用前后四个反引号 <code>`。  
+注意2：第一行</code> 后面协商语言名称bash/python，可以开启语法高亮。</p>
+<h3>8. 超链接</h3>
+<p>格式：<code>[显示文字](网址)</code><br>
+源码：</p>
+<div class="highlight"><pre><span></span><code>[前往我的 Github](https://github.com/zorroluo)
+</code></pre></div>
+
+<p>以上代码渲染结果如下:<br>
+<a href="https://github.com/zorroluo">前往我的 Github</a></p>
+<h3>9. 插入图片</h3>
+<p>格式：<code>![图片提示文字](图片路径)</code><br>
+源码：</p>
+<div class="highlight"><pre><span></span><code>![我的博客头像](images/icon_about_free.jpg)
+</code></pre></div>
+
+<p>以上代码渲染结果如下：
+<img alt="我的博客头像" src="images/icon_about_free.jpg"><br>
+注意：在pelican项目里，图片一般放在<code>content/images/</code></p>
+<h3>10. 引用块（引用一句话）</h3>
+<p>源码：</p>
+<div class="highlight"><pre><span></span><code>&gt; 这是一段引用的文字
+&gt; 可以多行引用
+</code></pre></div>
+
+<p>以上代码渲染结果如下：</p>
+<blockquote>
+<p>这是一段引用的文字<br>
+可以多行引用</p>
+</blockquote>
+<h3>11. 水平分割线</h3>
+<p>源码：</p>
+<div class="highlight"><pre><span></span><code>---
+</code></pre></div>
+
+<p>以上代码渲染结果如下：</p>
+<hr>
+<h3>12.转义符 \ (推荐，纯文本展示用的)</h3>
+<p>源码：</p>
+<div class="highlight"><pre><span></span><code>\# 一级标题
+</code></pre></div>
+
+<p>以上代码渲染结果如下：<br>
+# 一级标题<br>
+原理：<code>\</code>就是Markdown的"取消魔法符号"<br>
+需要转义的常见符号：<code># * - &gt; [] ()</code>都可以前面加<code>\</code></p>
+<h3>13. VSCode内置的markdown解析器与 Pelican默认的markdown解析器不同</h3>
+<p><strong>VSCode 内置预览 ≠ Pelican 默认 Markdown 解析器，两套解析规则不一样，VSCode 宽松容错，Pelican 默认严格</strong>，这是非常高频的坑。</p>
+<ol>
+<li>VSCode 默认预览用 <strong>GFM / CommonMark（GitHub 风格）</strong>，容错很强</li>
+<li>Pelican 默认用 <strong>Python-Markdown（原始标准 Markdown）</strong>，对块级语法规则严格得多，和 GFM 行为有明确差异
+你遇到的三个现象，全部是这个解析器差异导致，下面逐个拆解、给修复方案。</li>
+</ol>
+<p><strong>处理方案：写兼容 Python-Markdown 的规范写法（推荐，零改配置、最稳）</strong></p>
+<p>适配 Pelican 原生规则，也是静态博客最佳实践：</p>
+<ol>
+<li><strong>任何列表、代码块、标题、引用，前面必须留一个空行</strong></li>
+<li>分段用<strong>空一行</strong>，不要依赖单回车</li>
+<li>真的需要段落内强制换行：行尾 2 个空格 + 回车，或者直接写 HTML <code>&lt;br&gt;</code></li>
+</ol>                    </article>
+                </aside><!-- /#featured -->
+                    <section id="content" class="body">
+                        <h1>Other articles</h1>
+                        <hr />
+                        <ol id="posts-list" class="hfeed">
+
+                <li><article class="hentry">
+                    <header>
+                        <h1><a href="/wo-de-di-yi-pian-bo-ke-wen-zhang.html" rel="bookmark"
+                               title="Permalink to 我的第一篇博客文章">我的第一篇博客文章</a></h1>
+                    </header>
+
+                    <div class="entry-content">
 <footer class="post-info">
         <abbr class="published" title="2026-08-29T20:47:29+08:00">
                 Published: 六 29 8月 2026
@@ -29,9 +213,12 @@
                 </address>
         <p>In <a href="/category/bian-cheng-xue-xi.html">编程学习</a>.</p>
 <p>tags: <a href="/tag/python.html">Python</a> <a href="/tag/pelican.html">Pelican</a> </p>        
-</footer><!-- /.post-info --><p>欢迎来到我的个人主页</p>
-<p>这是第一篇Markdown格式书写的博客</p>                    </article>
-                </aside><!-- /#featured -->
+</footer><!-- /.post-info -->                        <p>这是使用Pelican搭建的第一篇博客测试文章。</p>
+                        <a class="readmore" href="/wo-de-di-yi-pian-bo-ke-wen-zhang.html">read more</a>
+                    </div><!-- /.entry-content -->
+                </article></li>
+                    </ol><!-- /#posts-list -->
+                    </section><!-- /#content -->
                 <section id="extras" class="body">
                                 <div class="blogroll">
                                         <h2>links</h2>
